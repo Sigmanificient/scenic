@@ -1,0 +1,11 @@
+*.o
+.clangd
+.cache/
+build/
+notes/
+compile_commands.json
+nb
+pkgs/all.h
+pkgs/all.c
+pkgs/all.h.tmp
+pkgs/all.c.tmp
