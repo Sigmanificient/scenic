@@ -15,12 +15,15 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "scenicos.h"
 
 #include "activate.h"
+#include "all.h"
 #include "arena.h"
+#include "build.h"
 #include "error.h"
 #include "realize.h"
 #include "resolve.h"
@@ -30,6 +33,37 @@ extern const system_cfg CFG;
 
 static uint32_t next_generation_number(void) {
     return 1;
+}
+
+// TODO: probably some kind of long_opt parser
+// to have nice sub commands ux
+
+static
+int cmd_build(int argc, char **argv) {
+    arena *a;
+
+    if (argc < 3) {
+        fprintf(stderr, "scn: no package to build.\n");
+        return EXIT_FAILURE;
+    }
+
+    a = arena_create(1 << 20);
+
+    if (a == NULL) {
+        fprintf(stderr, "scn: arena alloc failed\n");
+        return EXIT_FAILURE;
+    }
+
+    for (size_t i = 0; i < PKGS_REGISTRY_LEN; i++) {
+        if (!strcmp(PKGS_REGISTRY[i]->name, argv[2])) {
+            build_pkg_from_def(a, PKGS_REGISTRY[i]);
+            return EXIT_SUCCESS;
+        }
+    }
+    fprintf(stderr,
+        "scn: no package named [%s] to build.\n",
+        argv[2]);
+    return EXIT_FAILURE;
 }
 
 static int cmd_switch(void) {
@@ -120,6 +154,7 @@ static void usage(void) {
         "usage: scn <command>\n"
         "\n"
         "commands:\n"
+        "  build      build a single named package from the registry\n"
         "  switch     build and activate the current config\n"
         "  validate   check the current config without activating\n"
         "  rollback   activate the previous generation\n"
@@ -133,6 +168,7 @@ int main(int argc, char **argv) {
 
     const char *cmd = argv[1];
 
+    if (strcmp(cmd, "build") == 0) return cmd_build(argc, argv);
     if (strcmp(cmd, "switch") == 0)   return cmd_switch();
     if (strcmp(cmd, "validate") == 0) return cmd_validate();
     if (strcmp(cmd, "rollback") == 0) return cmd_rollback();

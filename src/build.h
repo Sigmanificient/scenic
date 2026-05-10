@@ -30,4 +30,7 @@ realize_error build_pkg(
     size_t              pkg_idx
 );
 
+bool build_pkg_from_def(arena *a, const pkg *def);
+
+
 #endif

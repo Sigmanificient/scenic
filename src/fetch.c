@@ -15,7 +15,6 @@
 
 #include "fetch.h"
 
-#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -90,8 +89,6 @@ fetch_error fetch(const pkg *p, const char *dest_path) {
 
     char actual[65] = {0};
     if (!sha256_verify_file(dest_path, p->sha256, actual)) {
-        fprintf(stderr, "hash mismatch: actual=[%s], expected=[%s]\n", actual, p->sha256);
-
         return (fetch_error){
             .kind = FETCH_E_HASH_MISMATCH,
             .url = p->src,

@@ -27,6 +27,8 @@
 #include "sandbox.h"
 #include "store.h"
 
+#include "all.h"
+
 #define WORK_ROOT "/var/lib/scn/work"
 
 /**
@@ -136,4 +138,49 @@ realize_error build_pkg(
     }
 
     return REALIZE_OK_VAL;
+}
+
+bool build_pkg_from_def(arena *a, const pkg *def)
+{
+    resolved_list resolved_pkgs;
+    system_cfg cfg = {
+      .pkgs = {
+        .data = PKGS_REGISTRY,
+        .len = PKGS_REGISTRY_LEN
+      }
+    };
+
+    resolve_error rerr = resolve(a, &cfg, &resolved_pkgs);
+    if (rerr.kind != RESOLVE_OK) {
+        fprintf(stderr, "%s : %s\n", rerr.pkg_name, rerr.dep_name);
+        return false;
+    }
+
+    bool found = false;
+    size_t def_idx;
+    for (size_t i = 0; i < resolved_pkgs.len; i++) {
+        if (resolved_pkgs.data[i].def != def) continue;
+        def_idx = i;
+        found = true;
+        break;
+    }
+    if (!found) {
+        fprintf(stderr, "something went wrong :(\n");
+        return false;
+    }
+
+    printf("building: [%s]\n", resolved_pkgs.data[def_idx].store_path);
+
+    realize_error err = build_pkg(
+        a,
+        resolved_pkgs.data[def_idx].def,
+        &cfg.pkgs,
+        resolved_pkgs.data,
+        def_idx);
+    if (err.kind != REALIZE_OK) {
+        realize_error_print(&err);
+        return false;
+    }
+
+    return true;
 }
