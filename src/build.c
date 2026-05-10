@@ -86,12 +86,12 @@ realize_error build_pkg(
     }
 
     char *const tar_argv[] = {
-        "/usr/bin/tar", "-xf", src_tarball, "-C", src_dir, "--strip-components=1",
+        "tar", "-xf", src_tarball, "-C", src_dir, "--strip-components=1",
         NULL,
     };
     char *const tar_envp[] = { NULL };
 
-    run_error tar_err = run("/usr/bin/tar", tar_argv, tar_envp, NULL, log_path);
+    run_error tar_err = run("tar", tar_argv, tar_envp, NULL, log_path);
     if (tar_err.kind != RUN_OK) {
         return (realize_error){
             .kind = REALIZE_E_BUILD,

@@ -2,12 +2,59 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+#include <linux/limits.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
 #include <unistd.h>
+
+static
+bool resolve_path(const char *cmd, char const **out)
+{
+    static char full[PATH_MAX];
+    size_t len;
+
+    if (*cmd == '/') {
+        *out = cmd;
+        return true;
+    }
+
+    const char *path = getenv("PATH");
+    if (path == NULL)
+        goto not_found;
+
+    while (*path != '\0') {
+        len = strcspn(path, ":");
+
+        if (len == 0) {
+            path++;
+            continue;
+        }
+
+        if (len + 1 + strlen(cmd) < sizeof(full)) {
+            memcpy(full, path, len);
+            full[len] = '/';
+            strcpy(full + len + 1, cmd);
+
+            if (access(full, X_OK) == 0) {
+                *out = full;
+                return true;
+            }
+        }
+
+        path += len;
+        path += strspn(path, ":");
+    }
+not_found:
+    *out = NULL;
+    return false;
+}
 
 /**
  * run() - Fork+exec a command with stdout/stderr captured to a log.
@@ -30,6 +77,16 @@ run_error run(
     const char  *log_path)
 {
     run_error err = RUN_OK_VAL;
+
+    char const *cmd_filepath;
+
+    if (!resolve_path(cmd, &cmd_filepath)) {
+        err.kind = RUN_E_SPAWN;
+        err.errno_val = errno;
+        return err;
+    }
+
+    fprintf(stderr, "running [%s]\n", cmd_filepath);
 
     int log_fd = open(log_path, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
     if (log_fd < 0) {
