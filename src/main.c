@@ -27,7 +27,7 @@ static int cmd_switch(void) {
     }
 
     arena *a = arena_create(1 << 20);
-    if (a == nullptr) {
+    if (a == NULL) {
         fprintf(stderr, "scn: arena alloc failed\n");
         return 1;
     }
@@ -77,7 +77,7 @@ static int cmd_validate(void) {
     if (!validate(&CFG)) return 1;
 
     arena *a = arena_create(1 << 20);
-    if (a == nullptr) return 1;
+    if (a == NULL) return 1;
 
     resolved_list resolved = {0};
     resolve_error rerr = resolve(a, &CFG, &resolved);
@@ -95,7 +95,7 @@ static int cmd_validate(void) {
 
 static int cmd_rollback(void) {
     arena *a = arena_create(1 << 16);
-    if (a == nullptr) return 1;
+    if (a == NULL) return 1;
     int rc = activate_rollback(a);
     arena_destroy(a);
     return rc == 0 ? 0 : 1;

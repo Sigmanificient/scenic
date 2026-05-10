@@ -1,6 +1,7 @@
 #ifndef SCENICOS_H
 #define SCENICOS_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -18,7 +19,7 @@ typedef struct {
     size_t            len;
 } pkg_refs;
 
-typedef enum : uint8_t {
+typedef enum {
     BUILD_AUTOTOOLS = 1,
     BUILD_CMAKE     = 2,
     BUILD_MESON     = 3,

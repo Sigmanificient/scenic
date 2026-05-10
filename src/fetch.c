@@ -27,10 +27,10 @@ fetch_error fetch(const pkg *p, const char *dest_path) {
         "--retry-delay", "2",
         "-o", (char *)dest_path,
         (char *)p->src,
-        nullptr,
+        NULL,
     };
 
-    char *const envp[] = { nullptr };
+    char *const envp[] = { NULL };
 
     char log_path[4096];
     int n = snprintf(log_path, sizeof(log_path), "%s.fetch.log", dest_path);
@@ -42,7 +42,7 @@ fetch_error fetch(const pkg *p, const char *dest_path) {
         };
     }
 
-    run_error rerr = run("/usr/bin/curl", argv, envp, nullptr, log_path);
+    run_error rerr = run("/usr/bin/curl", argv, envp, NULL, log_path);
     if (rerr.kind != RUN_OK) {
         fetch_error fe = {
             .kind = FETCH_E_NETWORK,

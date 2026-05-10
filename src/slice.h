@@ -5,6 +5,6 @@
 
 #define ARRAY_LEN(a) (sizeof(a) / sizeof((a)[0]))
 #define SLICE_FROM_ARRAY(a) { .data = (a), .len = ARRAY_LEN(a) }
-#define SLICE_EMPTY { .data = nullptr, .len = 0 }
+#define SLICE_EMPTY { .data = NULL, .len = 0 }
 
 #endif

@@ -1,8 +1,10 @@
 #ifndef SCENIC_VALIDATE_H
 #define SCENIC_VALIDATE_H
 
+#include <stdbool.h>
+
 #include "../include/scenicos.h"
 
-[[nodiscard]] bool validate(const system_cfg *cfg);
+bool validate(const system_cfg *cfg);
 
 #endif

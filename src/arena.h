@@ -5,12 +5,12 @@
 
 typedef struct arena arena;
 
-[[nodiscard]] arena *arena_create(size_t initial_capacity);
+arena *arena_create(size_t initial_capacity);
 void  arena_destroy(arena *a);
 
-[[nodiscard]] void *arena_alloc(arena *a, size_t size, size_t align);
-[[nodiscard]] char *arena_strdup(arena *a, const char *s);
-[[nodiscard]] char *arena_sprintf(arena *a, const char *fmt, ...);
+void *arena_alloc(arena *a, size_t size, size_t align);
+char *arena_strdup(arena *a, const char *s);
+char *arena_sprintf(arena *a, const char *fmt, ...);
 
 void arena_reset(arena *a);
 

@@ -6,7 +6,7 @@
 #include "error.h"
 #include "resolve.h"
 
-[[nodiscard]] realize_error realize(
+realize_error realize(
     arena              *a,
     const pkg_refs     *all_pkgs,
     const resolved_list *resolved);

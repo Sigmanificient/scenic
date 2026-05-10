@@ -4,7 +4,7 @@
 #include "../include/scenicos.h"
 #include "error.h"
 
-[[nodiscard]] fetch_error fetch(
+fetch_error fetch(
     const pkg  *p,
     const char *dest_path);
 

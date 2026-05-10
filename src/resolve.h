@@ -15,7 +15,7 @@ typedef struct {
     size_t          len;
 } resolved_list;
 
-[[nodiscard]] resolve_error resolve(
+resolve_error resolve(
     arena              *a,
     const system_cfg   *cfg,
     resolved_list      *out);

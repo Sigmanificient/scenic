@@ -6,7 +6,7 @@
 #include "error.h"
 #include "resolve.h"
 
-[[nodiscard]] realize_error build_pkg(
+realize_error build_pkg(
     arena              *a,
     const pkg          *p,
     const pkg_refs     *all_pkgs,

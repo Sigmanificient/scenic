@@ -23,8 +23,8 @@ struct arena {
 
 static block *block_create(size_t capacity) {
     block *b = malloc(sizeof(block) + capacity);
-    if (b == nullptr) return nullptr;
-    b->next = nullptr;
+    if (b == NULL) return NULL;
+    b->next = NULL;
     b->capacity = capacity;
     b->used = 0;
     return b;
@@ -38,12 +38,12 @@ static block *block_create(size_t capacity) {
  */
 arena *arena_create(size_t initial_capacity) {
     arena *a = malloc(sizeof(arena));
-    if (a == nullptr) return nullptr;
+    if (a == NULL) return NULL;
 
     block *b = block_create(initial_capacity);
-    if (b == nullptr) {
+    if (b == NULL) {
         free(a);
-        return nullptr;
+        return NULL;
     }
 
     a->head = b;
@@ -58,9 +58,9 @@ arena *arena_create(size_t initial_capacity) {
  * @a: Arena to free. NULL is permitted.
  */
 void arena_destroy(arena *a) {
-    if (a == nullptr) return;
+    if (a == NULL) return;
     block *b = a->first;
-    while (b != nullptr) {
+    while (b != NULL) {
         block *next = b->next;
         free(b);
         b = next;
@@ -80,7 +80,7 @@ void arena_destroy(arena *a) {
  * Return: Pointer to @size aligned bytes, or NULL on allocation failure.
  */
 void *arena_alloc(arena *a, size_t size, size_t align) {
-    if (a == nullptr || size == 0) return nullptr;
+    if (a == NULL || size == 0) return NULL;
 
     uintptr_t base = (uintptr_t)((char *)(a->head + 1) + a->head->used);
     uintptr_t aligned = (base + (align - 1)) & ~(align - 1);
@@ -96,7 +96,7 @@ void *arena_alloc(arena *a, size_t size, size_t align) {
     if (new_cap < size + align) new_cap = size + align;
 
     block *b = block_create(new_cap);
-    if (b == nullptr) return nullptr;
+    if (b == NULL) return NULL;
 
     b->next = a->head;
     a->head = b;
@@ -119,10 +119,10 @@ void *arena_alloc(arena *a, size_t size, size_t align) {
  * Return: Owned-by-arena copy of @s, or NULL on allocation failure.
  */
 char *arena_strdup(arena *a, const char *s) {
-    if (s == nullptr) return nullptr;
+    if (s == NULL) return NULL;
     size_t len = strlen(s) + 1;
     char *out = arena_alloc(a, len, 1);
-    if (out == nullptr) return nullptr;
+    if (out == NULL) return NULL;
     memcpy(out, s, len);
     return out;
 }
@@ -138,12 +138,12 @@ char *arena_sprintf(arena *a, const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
-    int len = vsnprintf(nullptr, 0, fmt, ap);
+    int len = vsnprintf(NULL, 0, fmt, ap);
     va_end(ap);
-    if (len < 0) return nullptr;
+    if (len < 0) return NULL;
 
     char *out = arena_alloc(a, (size_t)len + 1, 1);
-    if (out == nullptr) return nullptr;
+    if (out == NULL) return NULL;
 
     va_start(ap, fmt);
     vsnprintf(out, (size_t)len + 1, fmt, ap);
@@ -159,7 +159,7 @@ char *arena_sprintf(arena *a, const char *fmt, ...) {
  * reset to zero.
  */
 void arena_reset(arena *a) {
-    if (a == nullptr) return;
+    if (a == NULL) return;
 
     block *b = a->head;
     while (b != a->first) {
@@ -173,5 +173,5 @@ void arena_reset(arena *a) {
     a->total_cap = a->first->capacity;
 }
 
-size_t arena_used(const arena *a)     { return a == nullptr ? 0 : a->total_used; }
-size_t arena_capacity(const arena *a) { return a == nullptr ? 0 : a->total_cap; }
+size_t arena_used(const arena *a)     { return a == NULL ? 0 : a->total_used; }
+size_t arena_capacity(const arena *a) { return a == NULL ? 0 : a->total_cap; }

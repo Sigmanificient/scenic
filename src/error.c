@@ -64,19 +64,19 @@ void realize_error_print(const realize_error *e) {
             return;
         case REALIZE_E_FETCH:
             fprintf(stderr, "scn: failed to realize '%s' (fetch):\n  ", e->pkg_name);
-            fetch_error_print(&e->fetch);
+            fetch_error_print(&e->value.fetch);
             return;
         case REALIZE_E_BUILD:
             fprintf(stderr, "scn: failed to realize '%s' (build):\n  ", e->pkg_name);
-            run_error_print(&e->run);
+            run_error_print(&e->value.run);
             return;
         case REALIZE_E_SANDBOX:
             fprintf(stderr, "scn: failed to set up sandbox for '%s': %s\n",
-                    e->pkg_name, strerror(e->errno_val));
+                    e->pkg_name, strerror(e->value.errno_val));
             return;
         case REALIZE_E_STORE:
             fprintf(stderr, "scn: store error for '%s': %s\n",
-                    e->pkg_name, strerror(e->errno_val));
+                    e->pkg_name, strerror(e->value.errno_val));
             return;
     }
 }

@@ -6,7 +6,7 @@
 
 #include "store.h"
 
-typedef enum : uint8_t {
+typedef enum {
     UNVISITED = 0,
     VISITING,
     VISITED,
@@ -19,7 +19,7 @@ struct closure_node {
 };
 
 static bool closure_contains(const closure_node *head, const pkg *p) {
-    for (const closure_node *n = head; n != nullptr; n = n->next) {
+    for (const closure_node *n = head; n != NULL; n = n->next) {
         if (n->p == p) return true;
     }
     return false;
@@ -34,7 +34,7 @@ static bool closure_collect(
     if (closure_contains(*head, p)) return true;
 
     closure_node *node = arena_alloc(a, sizeof(closure_node), alignof(closure_node));
-    if (node == nullptr) return false;
+    if (node == NULL) return false;
     node->p    = p;
     node->next = *head;
     *head      = node;
@@ -120,21 +120,21 @@ resolve_error resolve(
         }
     }
 
-    closure_node *head = nullptr;
+    closure_node *head = NULL;
     size_t n_closure = 0;
     for (size_t i = 0; i < cfg->pkgs.len; i++) {
         if (!closure_collect(a, cfg->pkgs.data[i], &head, &n_closure)) {
             return (resolve_error){ .kind = RESOLVE_E_OOM };
         }
     }
-    if (cfg->boot.kernel != nullptr) {
+    if (cfg->boot.kernel != NULL) {
         if (!closure_collect(a, cfg->boot.kernel, &head, &n_closure)) {
             return (resolve_error){ .kind = RESOLVE_E_OOM };
         }
     }
     for (size_t i = 0; i < cfg->users.len; i++) {
         const pkg *shell = cfg->users.data[i].shell;
-        if (shell != nullptr) {
+        if (shell != NULL) {
             if (!closure_collect(a, shell, &head, &n_closure)) {
                 return (resolve_error){ .kind = RESOLVE_E_OOM };
             }
@@ -147,13 +147,13 @@ resolve_error resolve(
                                        alignof(visit_state));
     resolved    *res    = arena_alloc(a, n_closure * sizeof(resolved),
                                        alignof(resolved));
-    if (closure == nullptr || state == nullptr || res == nullptr) {
+    if (closure == NULL || state == NULL || res == NULL) {
         return (resolve_error){ .kind = RESOLVE_E_OOM };
     }
 
     {
         size_t i = 0;
-        for (closure_node *n = head; n != nullptr; n = n->next) {
+        for (closure_node *n = head; n != NULL; n = n->next) {
             closure[i++] = n->p;
         }
     }

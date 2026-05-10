@@ -48,7 +48,7 @@ run_error run(
     }
 
     if (pid == 0) {
-        if (cwd != nullptr && chdir(cwd) < 0) {
+        if (cwd != NULL && chdir(cwd) < 0) {
             dprintf(log_fd, "run: chdir(%s) failed: %s\n", cwd, strerror(errno));
             _exit(127);
         }

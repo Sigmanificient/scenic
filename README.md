@@ -1,6 +1,6 @@
 # scenic
 
-A from-source declarative Linux distribution written in disciplined C23.
+A from-source declarative Linux distribution written in disciplined C99.
 
 ## Build
 

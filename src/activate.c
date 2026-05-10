@@ -1,8 +1,8 @@
 #define _GNU_SOURCE
-#include "activate.h"
 
 #include <errno.h>
-#include <stdio.h>
+
+#include "activate.h"
 
 /**
  * activate() - Build and activate a generation.

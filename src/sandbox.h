@@ -4,7 +4,7 @@
 #include "../include/scenicos.h"
 #include "resolve.h"
 
-[[nodiscard]] int sandbox_setup(
+int sandbox_setup(
     const char     *sandbox_root,
     const pkg_refs *deps,
     const resolved *resolved_deps,

@@ -1,7 +1,8 @@
-#include "validate.h"
-
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "validate.h"
 
 static bool is_known_bootloader(const char *name) {
     return strcmp(name, "limine")   == 0
@@ -25,7 +26,7 @@ static bool is_known_bootloader(const char *name) {
 bool validate(const system_cfg *cfg) {
     bool ok = true;
 
-    if (cfg->hostname == nullptr || cfg->hostname[0] == '\0') {
+    if (cfg->hostname == NULL || cfg->hostname[0] == '\0') {
         fprintf(stderr, "scn: hostname is empty\n");
         ok = false;
     }
@@ -35,7 +36,7 @@ bool validate(const system_cfg *cfg) {
         ok = false;
     }
 
-    if (cfg->boot.kernel == nullptr) {
+    if (cfg->boot.kernel == NULL) {
         fprintf(stderr, "scn: boot.kernel is null\n");
         ok = false;
     }
@@ -43,13 +44,13 @@ bool validate(const system_cfg *cfg) {
     for (size_t i = 0; i < cfg->users.len; i++) {
         const user *u = &cfg->users.data[i];
 
-        if (u->name == nullptr || u->name[0] == '\0') {
+        if (u->name == NULL || u->name[0] == '\0') {
             fprintf(stderr, "scn: user[%zu] has empty name\n", i);
             ok = false;
             continue;
         }
 
-        if (u->shell == nullptr) {
+        if (u->shell == NULL) {
             fprintf(stderr, "scn: user '%s' has null shell\n", u->name);
             ok = false;
         }
@@ -65,7 +66,7 @@ bool validate(const system_cfg *cfg) {
     for (size_t i = 0; i < cfg->services.len; i++) {
         const service *s = &cfg->services.data[i];
 
-        if (s->name == nullptr || s->name[0] == '\0') {
+        if (s->name == NULL || s->name[0] == '\0') {
             fprintf(stderr, "scn: service[%zu] has empty name\n", i);
             ok = false;
             continue;

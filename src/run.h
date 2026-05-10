@@ -3,7 +3,7 @@
 
 #include "error.h"
 
-[[nodiscard]] run_error run(
+run_error run(
     const char  *cmd,
     char *const  argv[],
     char *const  envp[],

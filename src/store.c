@@ -81,14 +81,14 @@ const char *store_path_compute(
 
     for (size_t i = 0; i < p->deps.len; i++) {
         const pkg *target = p->deps.data[i];
-        const char *dep_path = nullptr;
+        const char *dep_path = NULL;
         for (size_t j = 0; j < n_resolved; j++) {
             if (resolved_pkgs[j].def == target) {
                 dep_path = resolved_pkgs[j].store_path;
                 break;
             }
         }
-        if (dep_path == nullptr) return nullptr;
+        if (dep_path == NULL) return NULL;
         HASH_FIELD(dep_path);
     }
 

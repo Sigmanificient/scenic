@@ -46,7 +46,7 @@ realize_error build_pkg(
     }
 
     const char *base = strrchr(store_path, '/');
-    base = (base != nullptr) ? base + 1 : store_path;
+    base = (base != NULL) ? base + 1 : store_path;
 
     char *work_dir     = arena_sprintf(a, "%s/%s", WORK_ROOT, base);
     char *src_tarball  = arena_sprintf(a, "%s/source", work_dir);
@@ -55,21 +55,21 @@ realize_error build_pkg(
     char *log_path     = arena_sprintf(a, "%s/build.log", work_dir);
     char *out_dir      = arena_sprintf(a, "%s/out", work_dir);
 
-    if (work_dir == nullptr || src_tarball == nullptr || src_dir == nullptr || sandbox_root == nullptr || log_path == nullptr || out_dir == nullptr) {
+    if (work_dir == NULL || src_tarball == NULL || src_dir == NULL || sandbox_root == NULL || log_path == NULL || out_dir == NULL) {
         return (realize_error){
             .kind = REALIZE_E_STORE,
             .pkg_name = p->name,
-            .errno_val = ENOMEM,
+            .value.errno_val = ENOMEM,
         };
     }
 
     if (mkdir(WORK_ROOT, 0755) < 0 && errno != EEXIST) {
         return (realize_error){ .kind = REALIZE_E_STORE, .pkg_name = p->name,
-                                .errno_val = errno };
+                                .value.errno_val = errno };
     }
     if (mkdir(work_dir, 0755) < 0 && errno != EEXIST) {
         return (realize_error){ .kind = REALIZE_E_STORE, .pkg_name = p->name,
-                                .errno_val = errno };
+                                .value.errno_val = errno };
     }
 
     fetch_error ferr = fetch(p, src_tarball);
@@ -77,27 +77,27 @@ realize_error build_pkg(
         return (realize_error){
             .kind = REALIZE_E_FETCH,
             .pkg_name = p->name,
-            .fetch = ferr,
+            .value.fetch = ferr,
         };
     }
 
     if (mkdir(src_dir, 0755) < 0 && errno != EEXIST) {
         return (realize_error){ .kind = REALIZE_E_STORE, .pkg_name = p->name,
-                                .errno_val = errno };
+                                .value.errno_val = errno };
     }
 
     char *const tar_argv[] = {
         "/usr/bin/tar", "-xf", src_tarball, "-C", src_dir, "--strip-components=1",
-        nullptr,
+        NULL,
     };
-    char *const tar_envp[] = { nullptr };
+    char *const tar_envp[] = { NULL };
 
-    run_error tar_err = run("/usr/bin/tar", tar_argv, tar_envp, nullptr, log_path);
+    run_error tar_err = run("/usr/bin/tar", tar_argv, tar_envp, NULL, log_path);
     if (tar_err.kind != RUN_OK) {
         return (realize_error){
             .kind = REALIZE_E_BUILD,
             .pkg_name = p->name,
-            .run = tar_err,
+            .value.run = tar_err,
         };
     }
 
@@ -106,7 +106,7 @@ realize_error build_pkg(
         return (realize_error){
             .kind = REALIZE_E_SANDBOX,
             .pkg_name = p->name,
-            .errno_val = src,
+            .value.errno_val = src,
         };
     }
 
@@ -117,7 +117,7 @@ realize_error build_pkg(
         return (realize_error){
             .kind = REALIZE_E_STORE,
             .pkg_name = p->name,
-            .errno_val = rc,
+            .value.errno_val = rc,
         };
     }
 

@@ -42,5 +42,5 @@ int sandbox_setup(
  * @sandbox_root: Directory previously passed to sandbox_setup().
  */
 void sandbox_teardown(const char *sandbox_root) {
-    if (sandbox_root == nullptr) return;
+    if (sandbox_root == NULL) return;
 }

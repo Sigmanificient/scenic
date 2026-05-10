@@ -1,10 +1,12 @@
 #define _GNU_SOURCE
-#include "hash.h"
 
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "hash.h"
 
 static const uint32_t K[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -189,8 +191,8 @@ bool sha256_verify_file(
 
     char hex[65];
     sha256_hex(digest, hex);
-    if (actual_hex != nullptr) memcpy(actual_hex, hex, 65);
+    if (actual_hex != NULL) memcpy(actual_hex, hex, 65);
 
-    if (expected_hex == nullptr) return true;
+    if (expected_hex == NULL) return true;
     return strcmp(hex, expected_hex) == 0;
 }

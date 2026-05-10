@@ -1,5 +1,5 @@
 CC      ?= cc
-CFLAGS  ?= -std=c23 -O2 -g \
+CFLAGS  ?= -std=c99 -O2 -g \
            -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
            -Wstrict-prototypes -Wmissing-prototypes \
            -Wno-unused-parameter \
@@ -66,3 +66,6 @@ clean:
 
 switch: scn
 	./scn switch
+
+debug:
+	$(MAKE) $(MAKEFLAGS) SANITIZE=1

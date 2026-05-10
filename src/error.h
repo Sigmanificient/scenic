@@ -2,9 +2,8 @@
 #define SCENIC_ERROR_H
 
 #include <stddef.h>
-#include <stdint.h>
 
-typedef enum : uint8_t {
+typedef enum {
     RESOLVE_OK = 0,
     RESOLVE_E_CYCLE,
     RESOLVE_E_MISSING_DEP,
@@ -20,7 +19,7 @@ typedef struct {
 
 #define RESOLVE_OK_VAL ((resolve_error){ .kind = RESOLVE_OK })
 
-typedef enum : uint8_t {
+typedef enum {
     FETCH_OK = 0,
     FETCH_E_NETWORK,
     FETCH_E_HASH_MISMATCH,
@@ -37,7 +36,7 @@ typedef struct {
 
 #define FETCH_OK_VAL ((fetch_error){ .kind = FETCH_OK })
 
-typedef enum : uint8_t {
+typedef enum {
     RUN_OK = 0,
     RUN_E_SPAWN,
     RUN_E_NONZERO,
@@ -53,7 +52,7 @@ typedef struct {
 
 #define RUN_OK_VAL ((run_error){ .kind = RUN_OK })
 
-typedef enum : uint8_t {
+typedef enum {
     REALIZE_OK = 0,
     REALIZE_E_FETCH,
     REALIZE_E_BUILD,
@@ -68,7 +67,7 @@ typedef struct {
         fetch_error fetch;
         run_error   run;
         int         errno_val;
-    };
+    } value;
 } realize_error;
 
 #define REALIZE_OK_VAL ((realize_error){ .kind = REALIZE_OK })
