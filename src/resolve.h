@@ -1,9 +1,9 @@
 #ifndef SCENIC_RESOLVE_H
 #define SCENIC_RESOLVE_H
 
-#include "../include/scenicos.h"
-#include "error.h"
 #include "arena.h"
+#include "error.h"
+#include "scenicos.h"
 
 typedef struct {
     const pkg  *def;

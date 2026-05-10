@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "../include/scenicos.h"
+#include "scenicos.h"
 
 bool validate(const system_cfg *cfg);
 

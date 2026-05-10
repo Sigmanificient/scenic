@@ -21,7 +21,7 @@ CFLAGS += -Wstrict-aliasing=2
 
 LDFLAGS ?=
 
-INCLUDES := -I include -I src
+INCLUDES := -I include -I src -I pkgs
 
 PROFILE ?= release
 ifeq ($(PROFILE),release)

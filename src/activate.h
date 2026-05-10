@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 
-#include "../include/scenicos.h"
+#include "scenicos.h"
+
 #include "arena.h"
 #include "resolve.h"
 

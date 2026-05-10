@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include "store.h"
 
 #include <errno.h>

@@ -1,7 +1,7 @@
 #include "resolve.h"
 
-#include <stdint.h>
 #include <stdalign.h>
+#include <stdint.h>
 #include <string.h>
 
 #include "store.h"

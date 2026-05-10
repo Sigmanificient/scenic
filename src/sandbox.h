@@ -1,7 +1,7 @@
 #ifndef SCENIC_SANDBOX_H
 #define SCENIC_SANDBOX_H
 
-#include "../include/scenicos.h"
+#include "scenicos.h"
 #include "resolve.h"
 
 int sandbox_setup(

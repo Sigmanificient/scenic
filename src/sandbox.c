@@ -1,11 +1,8 @@
-#define _GNU_SOURCE
 #include "sandbox.h"
 
 #include <errno.h>
 #include <fcntl.h>
 #include <sched.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/types.h>

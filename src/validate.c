@@ -1,8 +1,8 @@
+#include "validate.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "validate.h"
 
 static bool is_known_bootloader(const char *name) {
     return strcmp(name, "limine")   == 0

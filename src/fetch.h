@@ -1,7 +1,7 @@
 #ifndef SCENIC_FETCH_H
 #define SCENIC_FETCH_H
 
-#include "../include/scenicos.h"
+#include "scenicos.h"
 #include "error.h"
 
 fetch_error fetch(

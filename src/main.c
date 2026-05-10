@@ -1,10 +1,9 @@
-#define _GNU_SOURCE
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "../include/scenicos.h"
+#include "scenicos.h"
+
 #include "activate.h"
 #include "arena.h"
 #include "error.h"

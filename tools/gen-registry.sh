@@ -14,7 +14,7 @@ recipes=$(find "$PKGS_DIR" -mindepth 2 -maxdepth 2 -name '*.h' | sort)
     printf '#ifndef PKGS_ALL_H\n'
     printf '#define PKGS_ALL_H\n\n'
 
-    printf '#include "../include/scenicos.h"\n\n'
+    printf '#include "scenicos.h"\n\n'
 
     for h in $recipes; do
         name=$(basename "$h" .h)

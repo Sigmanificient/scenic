@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include "arena.h"
 
 #include <stdarg.h>

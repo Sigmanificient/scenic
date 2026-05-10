@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include "run.h"
 
 #include <errno.h>

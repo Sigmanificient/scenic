@@ -1,7 +1,8 @@
 #ifndef SCENIC_BUILD_H
 #define SCENIC_BUILD_H
 
-#include "../include/scenicos.h"
+#include "scenicos.h"
+
 #include "arena.h"
 #include "error.h"
 #include "resolve.h"

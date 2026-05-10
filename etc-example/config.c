@@ -1,11 +1,12 @@
 /* /etc/scn/config.c */
-#include "../include/scenicos.h"
-#include "../pkgs/glibc/glibc.h"
-#include "../pkgs/linux/linux.h"
-#include "../pkgs/neovim/neovim.h"
-#include "../pkgs/oxwm/oxwm.h"
-#include "../pkgs/dash/dash.h"
-#include "../pkgs/firefox/firefox.h"
+#include "scenicos.h"
+
+#include "dash/dash.h"
+#include "firefox/firefox.h"
+#include "glibc/glibc.h"
+#include "linux/linux.h"
+#include "neovim/neovim.h"
+#include "oxwm/oxwm.h"
 
 static const pkg *const my_pkgs[] = {
     &pkgs_glibc,
