@@ -91,7 +91,7 @@ realize_error build_pkg(
     };
     char *const tar_envp[] = { NULL };
 
-    run_error tar_err = run("tar", tar_argv, tar_envp, NULL, log_path);
+    run_error tar_err = run(tar_argv, tar_envp, NULL, log_path);
     if (tar_err.kind != RUN_OK) {
         return (realize_error){
             .kind = REALIZE_E_BUILD,

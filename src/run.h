@@ -4,7 +4,6 @@
 #include "error.h"
 
 run_error run(
-    const char  *cmd,
     char *const  argv[],
     char *const  envp[],
     const char  *cwd,
