@@ -9,6 +9,6 @@
 realize_error realize(
     arena              *a,
     const pkg_refs     *all_pkgs,
-    const resolved_list *resolved);
+    const resolved_list *resolved_pkgs);
 
 #endif

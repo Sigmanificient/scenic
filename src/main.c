@@ -39,8 +39,8 @@ static int cmd_switch(void) {
     }
 
     fprintf(stderr, "scn: resolving %zu packages\n", CFG.pkgs.len);
-    resolved_list resolved = {0};
-    resolve_error rerr = resolve(a, &CFG, &resolved);
+    resolved_list resolved_pkgs = {0};
+    resolve_error rerr = resolve(a, &CFG, &resolved_pkgs);
     if (rerr.kind != RESOLVE_OK) {
         resolve_error_print(&rerr);
         arena_destroy(a);
@@ -48,7 +48,7 @@ static int cmd_switch(void) {
     }
 
     fprintf(stderr, "scn: realizing\n");
-    realize_error realerr = realize(a, &CFG.pkgs, &resolved);
+    realize_error realerr = realize(a, &CFG.pkgs, &resolved_pkgs);
     if (realerr.kind != REALIZE_OK) {
         realize_error_print(&realerr);
         arena_destroy(a);
@@ -57,7 +57,7 @@ static int cmd_switch(void) {
 
     uint32_t gen = next_generation_number();
     fprintf(stderr, "scn: activating generation %u\n", gen);
-    int aerr = activate(a, &CFG, &resolved, gen);
+    int aerr = activate(a, &CFG, &resolved_pkgs, gen);
     if (aerr != 0) {
         fprintf(stderr, "scn: activation failed: %s\n", strerror(aerr));
         arena_destroy(a);
@@ -79,8 +79,8 @@ static int cmd_validate(void) {
     arena *a = arena_create(1 << 20);
     if (a == NULL) return 1;
 
-    resolved_list resolved = {0};
-    resolve_error rerr = resolve(a, &CFG, &resolved);
+    resolved_list resolved_pkgs = {0};
+    resolve_error rerr = resolve(a, &CFG, &resolved_pkgs);
     if (rerr.kind != RESOLVE_OK) {
         resolve_error_print(&rerr);
         arena_destroy(a);

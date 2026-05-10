@@ -21,12 +21,12 @@
 int activate(
     arena               *a,
     const system_cfg    *cfg,
-    const resolved_list *resolved,
+    const resolved_list *resolved_pkgs,
     uint32_t             generation)
 {
     (void)a;
     (void)cfg;
-    (void)resolved;
+    (void)resolved_pkgs;
     (void)generation;
     return ENOSYS;
 }
