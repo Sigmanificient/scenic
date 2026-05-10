@@ -1,5 +1,5 @@
 CC      ?= cc
-CFLAGS  ?= -std=c99 -O2 -g \
+CFLAGS  ?= -std=c99 -O2 -D_POSIX_C_SOURCE=200809L -g \
            -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
            -Wstrict-prototypes -Wmissing-prototypes \
            -Wno-unused-parameter \
