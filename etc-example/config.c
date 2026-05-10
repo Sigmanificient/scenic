@@ -1,5 +1,5 @@
-/* /etc/nb/config.c */
-#include "../include/nbos.h"
+/* /etc/scn/config.c */
+#include "../include/scenicos.h"
 #include "../pkgs/glibc/glibc.h"
 #include "../pkgs/linux/linux.h"
 #include "../pkgs/neovim/neovim.h"
@@ -30,7 +30,7 @@ static const user my_users[] = {
 };
 
 const system_cfg CFG = SYSTEM_CFG_INIT(
-    .hostname = "nbos-btw",
+    .hostname = "scenic-btw",
     .boot = {
         .bootloader    = "limine",
         .kernel        = &pkgs_linux,

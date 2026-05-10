@@ -1,7 +1,7 @@
-#ifndef NB_REALIZE_H
-#define NB_REALIZE_H
+#ifndef SCENIC_REALIZE_H
+#define SCENIC_REALIZE_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "arena.h"
 #include "error.h"
 #include "resolve.h"

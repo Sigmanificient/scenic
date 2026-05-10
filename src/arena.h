@@ -1,5 +1,5 @@
-#ifndef NB_ARENA_H
-#define NB_ARENA_H
+#ifndef SCENIC_ARENA_H
+#define SCENIC_ARENA_H
 
 #include <stddef.h>
 

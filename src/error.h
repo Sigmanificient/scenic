@@ -1,5 +1,5 @@
-#ifndef NB_ERROR_H
-#define NB_ERROR_H
+#ifndef SCENIC_ERROR_H
+#define SCENIC_ERROR_H
 
 #include <stddef.h>
 #include <stdint.h>

@@ -13,7 +13,7 @@
 #include "sandbox.h"
 #include "store.h"
 
-#define WORK_ROOT "/var/lib/nb/work"
+#define WORK_ROOT "/var/lib/scn/work"
 
 /**
  * build_pkg() - Realize one package into the store.

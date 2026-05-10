@@ -1,7 +1,7 @@
-#ifndef NB_RESOLVE_H
-#define NB_RESOLVE_H
+#ifndef SCENIC_RESOLVE_H
+#define SCENIC_RESOLVE_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "error.h"
 #include "arena.h"
 

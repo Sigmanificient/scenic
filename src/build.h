@@ -1,7 +1,7 @@
-#ifndef NB_BUILD_H
-#define NB_BUILD_H
+#ifndef SCENIC_BUILD_H
+#define SCENIC_BUILD_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "arena.h"
 #include "error.h"
 #include "resolve.h"

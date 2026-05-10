@@ -1,11 +1,11 @@
-#ifndef NB_STORE_H
-#define NB_STORE_H
+#ifndef SCENIC_STORE_H
+#define SCENIC_STORE_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "arena.h"
 #include "resolve.h"
 
-#define NB_STORE_ROOT "/nb/store"
+#define SCN_STORE_ROOT "/scn/store"
 
 [[nodiscard]] const char *store_path_compute(
     arena              *a,

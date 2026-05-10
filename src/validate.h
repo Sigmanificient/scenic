@@ -1,7 +1,7 @@
-#ifndef NB_VALIDATE_H
-#define NB_VALIDATE_H
+#ifndef SCENIC_VALIDATE_H
+#define SCENIC_VALIDATE_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 
 [[nodiscard]] bool validate(const system_cfg *cfg);
 

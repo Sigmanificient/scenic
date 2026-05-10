@@ -2,8 +2,8 @@
 set -eu
 
 mkdir -p build && cd build
-"$NB_SRCDIR/configure" \
-    --prefix="$NB_PREFIX" \
+ "$SCN_SRCDIR/configure" \
+    --prefix="$SCN_PREFIX" \
     --disable-werror
-make -j"$NB_JOBS"
-make install DESTDIR="$NB_OUT"
+make -j"$SCN_JOBS"
+make install DESTDIR="$SCN_OUT"

@@ -41,12 +41,12 @@ DEP_FILES = $(OBJ_FILES:.o=.d)
 
 .PHONY: all clean registry switch
 
-all: nb
+all: scn
 
-nb: $(BUILD_DIR)/nb
+scn: $(BUILD_DIR)/scn
 	@ln -sf $< $@
 
-$(BUILD_DIR)/nb: $(OBJ_FILES)
+$(BUILD_DIR)/scn: $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.o: %.c
@@ -62,7 +62,7 @@ registry:
 	mv pkgs/all.c.tmp pkgs/all.c
 
 clean:
-	rm -rf .build nb
+	rm -rf .build scn
 
-switch: nb
-	./nb switch
+switch: scn
+	./scn switch

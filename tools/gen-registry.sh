@@ -17,7 +17,7 @@ if [ "$MODE" = "h" ] || [ "$MODE" = "--h" ]; then
     printf '/* AUTO-GENERATED. Do not edit. */\n'
     printf '#ifndef PKGS_ALL_H\n'
     printf '#define PKGS_ALL_H\n\n'
-    printf '#include "../include/nbos.h"\n\n'
+    printf '#include "../include/scenicos.h"\n\n'
 
     for h in $recipes; do
         name=$(basename "$h" .h)

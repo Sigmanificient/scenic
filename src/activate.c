@@ -11,8 +11,8 @@
  * @resolved: Topologically-sorted resolved package list.
  * @generation: Generation number to assign.
  *
- * Symlinks resolved store paths into /nb/system/<gen>/, updates the
- * bootloader, atomically swaps /nb/system/current, and runs service
+ * Symlinks resolved store paths into /scn/system/<gen>/, updates the
+ * bootloader, atomically swaps /scn/system/current, and runs service
  * activations. On failure at any step, the previous generation
  * remains active.
  *

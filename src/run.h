@@ -1,5 +1,5 @@
-#ifndef NB_RUN_H
-#define NB_RUN_H
+#ifndef SCENIC_RUN_H
+#define SCENIC_RUN_H
 
 #include "error.h"
 

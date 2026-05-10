@@ -5,7 +5,7 @@ build/
 .build/
 notes/
 compile_commands.json
-nb
+scn
 pkgs/all.h
 pkgs/all.c
 pkgs/all.h.tmp

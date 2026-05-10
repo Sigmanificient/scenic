@@ -13,7 +13,7 @@
  * @p: Package whose @src URL and @sha256 are used.
  * @dest_path: Destination path on disk.
  *
- * Shells out to curl(1) so nb does not link libcurl. The downloaded
+ * Shells out to curl(1) so scn does not link libcurl. The downloaded
  * file's sha256 is compared against @p->sha256.
  *
  * Return: FETCH_OK_VAL on success, a tagged error otherwise.

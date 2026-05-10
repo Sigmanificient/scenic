@@ -1,5 +1,5 @@
-#ifndef NB_SLICE_H
-#define NB_SLICE_H
+#ifndef SCENIC_SLICE_H
+#define SCENIC_SLICE_H
 
 #include <stddef.h>
 

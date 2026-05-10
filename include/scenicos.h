@@ -1,10 +1,10 @@
-#ifndef NBOS_H
-#define NBOS_H
+#ifndef SCENICOS_H
+#define SCENICOS_H
 
 #include <stddef.h>
 #include <stdint.h>
 
-#define NBOS_SCHEMA_VERSION 1
+#define SCENICOS_SCHEMA_VERSION 1
 
 typedef struct {
     const char *const *data;
@@ -78,7 +78,7 @@ typedef struct {
 } system_cfg;
 
 #define SYSTEM_CFG_INIT(...) { \
-    .schema_version = NBOS_SCHEMA_VERSION, \
+    .schema_version = SCENICOS_SCHEMA_VERSION, \
     __VA_ARGS__ \
 }
 

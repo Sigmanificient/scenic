@@ -1,7 +1,7 @@
-#ifndef NB_SANDBOX_H
-#define NB_SANDBOX_H
+#ifndef SCENIC_SANDBOX_H
+#define SCENIC_SANDBOX_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "resolve.h"
 
 [[nodiscard]] int sandbox_setup(

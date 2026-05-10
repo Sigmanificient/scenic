@@ -1,5 +1,5 @@
-#ifndef NB_HASH_H
-#define NB_HASH_H
+#ifndef SCENIC_HASH_H
+#define SCENIC_HASH_H
 
 #include <stddef.h>
 #include <stdint.h>

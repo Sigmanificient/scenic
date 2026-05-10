@@ -1,7 +1,7 @@
-#ifndef NB_ACTIVATE_H
-#define NB_ACTIVATE_H
+#ifndef SCENIC_ACTIVATE_H
+#define SCENIC_ACTIVATE_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "arena.h"
 #include "resolve.h"
 

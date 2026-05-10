@@ -50,7 +50,7 @@ static void base32_encode(const uint8_t *in, size_t len, char *out) {
  * resolved dep paths). The first 20 bytes of the digest are base32
  * encoded; identical inputs always produce the same path.
  *
- * Return: "/nb/store/<hash>-<name>-<version>" owned by @a, or NULL if a
+ * Return: "/scn/store/<hash>-<name>-<version>" owned by @a, or NULL if a
  * dep's store path is not yet resolved.
  */
 const char *store_path_compute(
@@ -101,7 +101,7 @@ const char *store_path_compute(
     base32_encode(digest, 20, b32);
 
     return arena_sprintf(a, "%s/%s-%s-%s",
-                         NB_STORE_ROOT, b32, p->name, p->version);
+                         SCN_STORE_ROOT, b32, p->name, p->version);
 }
 
 /**

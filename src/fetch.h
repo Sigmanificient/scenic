@@ -1,7 +1,7 @@
-#ifndef NB_FETCH_H
-#define NB_FETCH_H
+#ifndef SCENIC_FETCH_H
+#define SCENIC_FETCH_H
 
-#include "../include/nbos.h"
+#include "../include/scenicos.h"
 #include "error.h"
 
 [[nodiscard]] fetch_error fetch(

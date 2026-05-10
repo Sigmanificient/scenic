@@ -26,17 +26,17 @@ bool validate(const system_cfg *cfg) {
     bool ok = true;
 
     if (cfg->hostname == nullptr || cfg->hostname[0] == '\0') {
-        fprintf(stderr, "nb: hostname is empty\n");
+        fprintf(stderr, "scn: hostname is empty\n");
         ok = false;
     }
 
     if (!is_known_bootloader(cfg->boot.bootloader)) {
-        fprintf(stderr, "nb: unknown bootloader '%s'\n", cfg->boot.bootloader);
+        fprintf(stderr, "scn: unknown bootloader '%s'\n", cfg->boot.bootloader);
         ok = false;
     }
 
     if (cfg->boot.kernel == nullptr) {
-        fprintf(stderr, "nb: boot.kernel is null\n");
+        fprintf(stderr, "scn: boot.kernel is null\n");
         ok = false;
     }
 
@@ -44,19 +44,19 @@ bool validate(const system_cfg *cfg) {
         const user *u = &cfg->users.data[i];
 
         if (u->name == nullptr || u->name[0] == '\0') {
-            fprintf(stderr, "nb: user[%zu] has empty name\n", i);
+            fprintf(stderr, "scn: user[%zu] has empty name\n", i);
             ok = false;
             continue;
         }
 
         if (u->shell == nullptr) {
-            fprintf(stderr, "nb: user '%s' has null shell\n", u->name);
+            fprintf(stderr, "scn: user '%s' has null shell\n", u->name);
             ok = false;
         }
 
         for (size_t j = i + 1; j < cfg->users.len; j++) {
             if (strcmp(u->name, cfg->users.data[j].name) == 0) {
-                fprintf(stderr, "nb: duplicate user name '%s'\n", u->name);
+                fprintf(stderr, "scn: duplicate user name '%s'\n", u->name);
                 ok = false;
             }
         }
@@ -66,14 +66,14 @@ bool validate(const system_cfg *cfg) {
         const service *s = &cfg->services.data[i];
 
         if (s->name == nullptr || s->name[0] == '\0') {
-            fprintf(stderr, "nb: service[%zu] has empty name\n", i);
+            fprintf(stderr, "scn: service[%zu] has empty name\n", i);
             ok = false;
             continue;
         }
 
         for (size_t j = i + 1; j < cfg->services.len; j++) {
             if (strcmp(s->name, cfg->services.data[j].name) == 0) {
-                fprintf(stderr, "nb: duplicate service name '%s'\n", s->name);
+                fprintf(stderr, "scn: duplicate service name '%s'\n", s->name);
                 ok = false;
             }
         }
