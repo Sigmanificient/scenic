@@ -20,8 +20,10 @@ CFLAGS += -Wno-unused-parameter
 CFLAGS += -Wstrict-aliasing=2
 
 LDFLAGS ?=
+LDLIBS += -lcurl
 
 INCLUDES := -I include -I src -I pkgs
+INCLUDES += $(shell pkg-config --cflags libcurl)
 
 PROFILE ?= release
 ifeq ($(PROFILE),release)
@@ -58,7 +60,7 @@ RM ?= rm --force
 all: $(BIN)
 
 $(BIN): $(OBJ_FILES)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(BUILD_DIR)/%.o: %.c
 	@ mkdir -p $(@D)

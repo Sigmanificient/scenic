@@ -5,7 +5,9 @@
     self,
     nixpkgs,
   }: let
-    applySystems = nixpkgs.lib.genAttrs [
+    inherit (nixpkgs) lib;
+
+    applySystems = lib.genAttrs [
       "x86_64-linux"
       "aarch64-linux"
     ];
@@ -31,6 +33,8 @@
         packages = with pkgs; [
           compiledb
           gcovr
+          pkg-config
+          (lib.getDev curl)
         ];
       };
     });
