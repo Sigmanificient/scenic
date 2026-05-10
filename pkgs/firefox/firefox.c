@@ -1,5 +1,5 @@
 #include "firefox.h"
-#include "../../core/glibc/glibc.h"
+#include "../glibc/glibc.h"
 
 static const pkg *const firefox_deps[] = { &pkgs_glibc };
 

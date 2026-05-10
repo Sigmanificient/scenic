@@ -11,6 +11,7 @@
     const pkg          *p,
     const pkg_refs     *all_pkgs,
     const resolved     *resolved_pkgs,
-    size_t              pkg_idx);
+    size_t              pkg_idx
+);
 
 #endif

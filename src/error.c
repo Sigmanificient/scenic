@@ -16,6 +16,9 @@ void resolve_error_print(const resolve_error *e) {
         case RESOLVE_E_DUPLICATE_NAME:
             fprintf(stderr, "nb: duplicate package name '%s' (two recipes export the same name)\n", e->pkg_name);
             return;
+        case RESOLVE_E_OOM:
+            fprintf(stderr, "nb: out of memory while resolving packages\n");
+            return;
     }
 }
 

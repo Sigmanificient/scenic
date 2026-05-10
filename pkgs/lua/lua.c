@@ -1,5 +1,5 @@
 #include "lua.h"
-#include "../../core/glibc/glibc.h"
+#include "../glibc/glibc.h"
 
 static const pkg *const lua_deps[] = { &pkgs_glibc };
 

@@ -3,13 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-static bool pkg_in_list(const pkg *p, const pkg_refs *list) {
-    for (size_t i = 0; i < list->len; i++) {
-        if (list->data[i] == p) return true;
-    }
-    return false;
-}
-
 static bool is_known_bootloader(const char *name) {
     return strcmp(name, "limine")   == 0
         || strcmp(name, "grub")     == 0
@@ -21,8 +14,11 @@ static bool is_known_bootloader(const char *name) {
  * @cfg: Configuration to inspect.
  *
  * Covers what resolve() does not: hostname presence, bootloader
- * recognition, kernel/shell pointers belong to the package list, and
- * uniqueness of user and service names. Errors are printed to stderr.
+ * recognition, non-null kernel/shell pointers, and uniqueness of user
+ * and service names. Pkg references (kernel, shells, declared pkgs)
+ * are all closure roots — resolve() auto-discovers transitive deps,
+ * so no "is in the package list" check is needed. Errors are printed
+ * to stderr.
  *
  * Return: true if every check passes.
  */
@@ -42,10 +38,6 @@ bool validate(const system_cfg *cfg) {
     if (cfg->boot.kernel == nullptr) {
         fprintf(stderr, "nb: boot.kernel is null\n");
         ok = false;
-    } else if (!pkg_in_list(cfg->boot.kernel, &cfg->pkgs)) {
-        fprintf(stderr, "nb: boot.kernel '%s' is not in the package list\n",
-                cfg->boot.kernel->name);
-        ok = false;
     }
 
     for (size_t i = 0; i < cfg->users.len; i++) {
@@ -59,10 +51,6 @@ bool validate(const system_cfg *cfg) {
 
         if (u->shell == nullptr) {
             fprintf(stderr, "nb: user '%s' has null shell\n", u->name);
-            ok = false;
-        } else if (!pkg_in_list(u->shell, &cfg->pkgs)) {
-            fprintf(stderr, "nb: user '%s' shell '%s' is not in the package list\n",
-                    u->name, u->shell->name);
             ok = false;
         }
 

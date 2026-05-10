@@ -10,8 +10,8 @@
 [[nodiscard]] const char *store_path_compute(
     arena              *a,
     const pkg          *p,
-    const pkg_refs     *all_pkgs,
-    const resolved     *resolved_pkgs);
+    const resolved     *resolved_pkgs,
+    size_t              n_resolved);
 
 [[nodiscard]] bool store_path_exists(const char *store_path);
 

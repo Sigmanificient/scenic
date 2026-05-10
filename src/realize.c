@@ -15,14 +15,16 @@
 realize_error realize(
     arena              *a,
     const pkg_refs     *all_pkgs,
-    const resolved_list *resolved)
-{
+    const resolved_list *resolved
+) {
     for (size_t i = 0; i < resolved->len; i++) {
-        realize_error err = build_pkg(a,
-                                       resolved->data[i].def,
-                                       all_pkgs,
-                                       resolved->data,
-                                       i);
+        realize_error err = build_pkg(
+            a,
+            resolved->data[i].def,
+            all_pkgs,
+            resolved->data,
+            i
+        );
         if (err.kind != REALIZE_OK) return err;
     }
     return REALIZE_OK_VAL;

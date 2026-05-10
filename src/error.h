@@ -9,6 +9,7 @@ typedef enum : uint8_t {
     RESOLVE_E_CYCLE,
     RESOLVE_E_MISSING_DEP,
     RESOLVE_E_DUPLICATE_NAME,
+    RESOLVE_E_OOM,
 } resolve_error_kind;
 
 typedef struct {

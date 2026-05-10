@@ -1,6 +1,6 @@
 #include "oxwm.h"
-#include "../../core/glibc/glibc.h"
-#include "../../lang/lua/lua.h"
+#include "../glibc/glibc.h"
+#include "../lua/lua.h"
 
 static const pkg *const oxwm_deps[] = {
     &pkgs_glibc,

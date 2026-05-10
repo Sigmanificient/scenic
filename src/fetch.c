@@ -19,6 +19,7 @@
  * Return: FETCH_OK_VAL on success, a tagged error otherwise.
  */
 fetch_error fetch(const pkg *p, const char *dest_path) {
+    // TODO: replace this with execvpe or libcurl
     char *const argv[] = {
         "/usr/bin/curl",
         "-fsSL",

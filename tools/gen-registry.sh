@@ -10,7 +10,7 @@ set -eu
 PKGS_DIR="${PKGS_DIR:-pkgs}"
 MODE="${1:-h}"
 
-recipes=$(find "$PKGS_DIR" -mindepth 3 -maxdepth 3 -name '*.h' \
+recipes=$(find "$PKGS_DIR" -mindepth 2 -maxdepth 2 -name '*.h' \
             ! -name 'all.h' | sort)
 
 if [ "$MODE" = "h" ] || [ "$MODE" = "--h" ]; then

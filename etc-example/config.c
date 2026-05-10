@@ -1,11 +1,11 @@
 /* /etc/nb/config.c */
 #include "../include/nbos.h"
-#include "../pkgs/core/glibc/glibc.h"
-#include "../pkgs/core/linux/linux.h"
-#include "../pkgs/editor/neovim/neovim.h"
-#include "../pkgs/wm/oxwm/oxwm.h"
-#include "../pkgs/shell/dash/dash.h"
-#include "../pkgs/browser/firefox/firefox.h"
+#include "../pkgs/glibc/glibc.h"
+#include "../pkgs/linux/linux.h"
+#include "../pkgs/neovim/neovim.h"
+#include "../pkgs/oxwm/oxwm.h"
+#include "../pkgs/dash/dash.h"
+#include "../pkgs/firefox/firefox.h"
 
 static const pkg *const my_pkgs[] = {
     &pkgs_glibc,

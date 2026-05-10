@@ -2,6 +2,7 @@
 .clangd
 .cache/
 build/
+.build/
 notes/
 compile_commands.json
 nb

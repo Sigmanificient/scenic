@@ -34,26 +34,16 @@ static void base32_encode(const uint8_t *in, size_t len, char *out) {
     out[out_idx] = '\0';
 }
 
-static const char *resolved_path_for(
-    const pkg          *target,
-    const pkg_refs     *all_pkgs,
-    const resolved     *resolved_pkgs)
-{
-    for (size_t i = 0; i < all_pkgs->len; i++) {
-        if (all_pkgs->data[i] == target) {
-            return resolved_pkgs[i].store_path;
-        }
-    }
-    return nullptr;
-}
+
+
 
 /**
  * store_path_compute() - Compute the content-addressed store path for @p.
  * @a: Arena that owns the returned string.
  * @p: Package whose inputs determine the path.
- * @all_pkgs: Full package list, used to look up dep store paths.
- * @resolved_pkgs: Parallel array of resolved entries; deps must already
+ * @resolved_pkgs: Resolved entries already topo-sorted; deps must already
  *                 have @store_path populated.
+ * @n_resolved: Number of valid entries in @resolved_pkgs.
  *
  * Hashes a length-prefixed canonical encoding of the package inputs
  * (name, version, src URL, source sha256, build flags, build system,
@@ -66,8 +56,8 @@ static const char *resolved_path_for(
 const char *store_path_compute(
     arena              *a,
     const pkg          *p,
-    const pkg_refs     *all_pkgs,
-    const resolved     *resolved_pkgs)
+    const resolved     *resolved_pkgs,
+    size_t              n_resolved)
 {
     sha256_ctx ctx;
     sha256_init(&ctx);
@@ -90,9 +80,14 @@ const char *store_path_compute(
     sha256_update(&ctx, "\0", 1);
 
     for (size_t i = 0; i < p->deps.len; i++) {
-        const char *dep_path = resolved_path_for(p->deps.data[i],
-                                                  all_pkgs,
-                                                  resolved_pkgs);
+        const pkg *target = p->deps.data[i];
+        const char *dep_path = nullptr;
+        for (size_t j = 0; j < n_resolved; j++) {
+            if (resolved_pkgs[j].def == target) {
+                dep_path = resolved_pkgs[j].store_path;
+                break;
+            }
+        }
         if (dep_path == nullptr) return nullptr;
         HASH_FIELD(dep_path);
     }

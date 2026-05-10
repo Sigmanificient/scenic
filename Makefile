@@ -1,5 +1,3 @@
-# Nb Makefile. C23, strict warnings, sanitizer-ready.
-
 CC      ?= cc
 CFLAGS  ?= -std=c23 -O2 -g \
            -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
@@ -8,10 +6,14 @@ CFLAGS  ?= -std=c23 -O2 -g \
            -fno-strict-aliasing
 LDFLAGS ?=
 
+PROFILE ?= release
 ifdef SANITIZE
+    PROFILE := sanitize
     CFLAGS  += -fsanitize=address,undefined -fno-omit-frame-pointer
     LDFLAGS += -fsanitize=address,undefined
 endif
+
+BUILD_DIR := .build/$(PROFILE)
 
 INCLUDES = -Iinclude -Isrc
 
@@ -31,20 +33,27 @@ SRC_FILES = \
     src/activate.c
 
 PKG_FILES = $(shell find pkgs -name '*.c')
-
 CONFIG_FILE ?= etc-example/config.c
 
-OBJ_FILES = $(SRC_FILES:.c=.o) $(PKG_FILES:.c=.o)
+ALL_SRCS  = $(SRC_FILES) $(PKG_FILES) $(CONFIG_FILE)
+OBJ_FILES = $(patsubst %.c,$(BUILD_DIR)/%.o,$(ALL_SRCS))
+DEP_FILES = $(OBJ_FILES:.o=.d)
 
 .PHONY: all clean registry switch
 
 all: nb
 
-nb: $(OBJ_FILES) $(CONFIG_FILE:.c=.o) pkgs/all.o
+nb: $(BUILD_DIR)/nb
+	@ln -sf $< $@
+
+$(BUILD_DIR)/nb: $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCLUDES) -MMD -MP -c -o $@ $<
+
+-include $(DEP_FILES)
 
 registry:
 	./tools/gen-registry.sh > pkgs/all.h.tmp
@@ -53,8 +62,7 @@ registry:
 	mv pkgs/all.c.tmp pkgs/all.c
 
 clean:
-	find . -name '*.o' -delete
-	rm -f nb
+	rm -rf .build nb
 
 switch: nb
 	./nb switch

@@ -1,5 +1,5 @@
 #include "dash.h"
-#include "../../core/glibc/glibc.h"
+#include "../glibc/glibc.h"
 
 static const pkg *const dash_deps[] = { &pkgs_glibc };
 

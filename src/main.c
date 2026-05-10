@@ -110,7 +110,8 @@ static void usage(void) {
         "  validate   check the current config without activating\n"
         "  rollback   activate the previous generation\n"
         "  diff       diff two generations (default: previous vs current)\n"
-        "  gc         remove store paths not referenced by any generation\n");
+        "  gc         remove store paths not referenced by any generation\n"
+    );
 }
 
 int main(int argc, char **argv) {
