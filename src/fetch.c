@@ -4,8 +4,52 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <curl/curl.h>
+#include <curl/easy.h>
+
 #include "hash.h"
-#include "run.h"
+
+static
+size_t write_file(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+    return fwrite(ptr, size, nmemb, (FILE *)stream);
+}
+
+static
+CURLcode download_package_source(const char *url, const char *dest_path)
+{
+    CURLcode res = CURLE_FAILED_INIT;
+    CURL *curl = curl_easy_init();
+    FILE *fp = NULL;
+
+    if (curl == NULL)
+        goto out;
+
+    fp = fopen(dest_path, "wb");
+    if (fp == NULL)
+        goto out;
+
+    fprintf(stderr, "preparing to fetch [%s]\n", url);
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_file);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+
+    res = curl_easy_perform(curl);
+out:
+    if (res != CURLE_OK)
+        fprintf(stderr, "curl failed: %s\n", curl_easy_strerror(res));
+    if (fp != NULL)
+        fclose(fp);
+    curl_easy_cleanup(curl);
+    return res;
+}
+
 
 /**
  * fetch() - Download a package's source tarball and verify its hash.
@@ -19,44 +63,20 @@
  */
 fetch_error fetch(const pkg *p, const char *dest_path) {
     // TODO: replace this with execvpe or libcurl
-    char *const argv[] = {
-        "/usr/bin/curl",
-        "-fsSL",
-        "--retry", "3",
-        "--retry-delay", "2",
-        "-o", (char *)dest_path,
-        (char *)p->src,
-        NULL,
-    };
+    CURLcode status = download_package_source(p->src, dest_path);
 
-    char *const envp[] = { NULL };
-
-    char log_path[4096];
-    int n = snprintf(log_path, sizeof(log_path), "%s.fetch.log", dest_path);
-    if (n < 0 || (size_t)n >= sizeof(log_path)) {
+    if (status != CURLE_OK) {
         return (fetch_error){
             .kind = FETCH_E_IO,
             .url = p->src,
-            .errno_val = ENAMETOOLONG,
+            .errno_val = (int)status,
         };
-    }
-
-    run_error rerr = run("/usr/bin/curl", argv, envp, NULL, log_path);
-    if (rerr.kind != RUN_OK) {
-        fetch_error fe = {
-            .kind = FETCH_E_NETWORK,
-            .url = p->src,
-            .errno_val = 0,
-        };
-        if (rerr.kind == RUN_E_SPAWN || rerr.kind == RUN_E_IO) {
-            fe.kind = FETCH_E_IO;
-            fe.errno_val = rerr.errno_val;
-        }
-        return fe;
     }
 
     char actual[65] = {0};
     if (!sha256_verify_file(dest_path, p->sha256, actual)) {
+        fprintf(stderr, "hash mismatch: actual=[%s], expected=[%s]\n", actual, p->sha256);
+
         return (fetch_error){
             .kind = FETCH_E_HASH_MISMATCH,
             .url = p->src,
