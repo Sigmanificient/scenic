@@ -1,12 +1,35 @@
-CC      ?= cc
-CFLAGS  ?= -std=c99 -O2 -D_POSIX_C_SOURCE=200809L -g \
-           -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
-           -Wstrict-prototypes -Wmissing-prototypes \
-           -Wno-unused-parameter \
-           -fno-strict-aliasing
+.POSIX:
+MAKEFLAGS += --no-builtin-rules
+MAKEFLAGS += --no-print-directory
+
+BIN := scn
+
+CC ?= cc
+
+CFLAGS := -std=c99
+CFLAGS += -D_POSIX_C_SOURCE=200809L
+CFLAGS += -O2
+
+CFLAGS += -Wall -Wextra
+CFLAGS += -Wpedantic
+CFLAGS += -Wshadow
+CFLAGS += -Wconversion
+CFLAGS += -Wmissing-prototypes
+CFLAGS += -Wstrict-prototypes
+CFLAGS += -Wno-unused-parameter
+CFLAGS += -Wstrict-aliasing=2
+
 LDFLAGS ?=
 
+INCLUDES := -I include -I src
+
 PROFILE ?= release
+ifeq ($(PROFILE),release)
+    CFLAGS += -DNEBUG -fomit-frame-pointer
+else
+    CFLAGS += -g3
+endif
+
 ifdef SANITIZE
     PROFILE := sanitize
     CFLAGS  += -fsanitize=address,undefined -fno-omit-frame-pointer
@@ -15,57 +38,57 @@ endif
 
 BUILD_DIR := .build/$(PROFILE)
 
-INCLUDES = -Iinclude -Isrc
+SRC_FILES := $(shell find src -name '*.c')
 
-SRC_FILES = \
-    src/main.c \
-    src/arena.c \
-    src/error.c \
-    src/hash.c \
-    src/store.c \
-    src/resolve.c \
-    src/validate.c \
-    src/fetch.c \
-    src/sandbox.c \
-    src/build.c \
-    src/run.c \
-    src/realize.c \
-    src/activate.c
-
-PKG_FILES = $(shell find pkgs -name '*.c')
+PKG_FILES := $(shell find pkgs -name '*.c')
 CONFIG_FILE ?= etc-example/config.c
+
+REGISTRY := pkgs/all.c
+REGISTRY_HEADER := $(REGISTRY:.c=.h)
 
 ALL_SRCS  = $(SRC_FILES) $(PKG_FILES) $(CONFIG_FILE)
 OBJ_FILES = $(patsubst %.c,$(BUILD_DIR)/%.o,$(ALL_SRCS))
 DEP_FILES = $(OBJ_FILES:.o=.d)
 
+
+RM ?= rm --force
+
 .PHONY: all clean registry switch
 
-all: scn
+all: $(BIN)
 
-scn: $(BUILD_DIR)/scn
-	@ln -sf $< $@
-
-$(BUILD_DIR)/scn: $(OBJ_FILES)
+$(BIN): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.o: %.c
-	@mkdir -p $(@D)
+	@ mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(INCLUDES) -MMD -MP -c -o $@ $<
 
 -include $(DEP_FILES)
 
-registry:
-	./tools/gen-registry.sh > pkgs/all.h.tmp
-	mv pkgs/all.h.tmp pkgs/all.h
-	./tools/gen-registry.sh --c > pkgs/all.c.tmp
-	mv pkgs/all.c.tmp pkgs/all.c
+$(REGISTRY) $(REGISTRY_HEADER):
+	./tools/gen-registry.sh
 
+.PHONY: registry
+registry: $(REGISTRY)
+
+.PHONY: clean
 clean:
-	rm -rf .build scn
+	rm -rf .build
 
+.PHONY: fclean
+fclean: clean
+	$(RM) scn
+	$(RM) $(REGISTRY) $(REGISTRY_HEADER)
+
+.NOTPARALLEL: re
+.PHONY: re
+re: fclean all
+
+.PHONY: switch
 switch: scn
 	./scn switch
 
+.PHONY: debug
 debug:
 	$(MAKE) $(MAKEFLAGS) SANITIZE=1
