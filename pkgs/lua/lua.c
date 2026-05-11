@@ -22,7 +22,7 @@ const pkg pkgs_lua = {
     .name        = "lua",
     .version     = "5.4.7",
     .src         = "https://www.lua.org/ftp/lua-5.4.7.tar.gz",
-    .sha256      = "0000000000000000000000000000000000000000000000000000000000000000",
+    .sha256      = "9fbf5e28ef86c69858f6d3d34eccc32e911c1a28b4120ff3e84aaa70cfbf1e30",
     .deps        = { .data = lua_deps, .len = sizeof(lua_deps) / sizeof(lua_deps[0]) },
     .build_flags = "",
     .build_sys   = BUILD_MAKE,

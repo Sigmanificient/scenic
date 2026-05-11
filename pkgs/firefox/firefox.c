@@ -22,7 +22,7 @@ const pkg pkgs_firefox = {
     .name        = "firefox",
     .version     = "133.0",
     .src         = "https://archive.mozilla.org/pub/firefox/releases/133.0/source/firefox-133.0.source.tar.xz",
-    .sha256      = "0000000000000000000000000000000000000000000000000000000000000000",
+    .sha256      = "492b2c9a3b6d215e38ce490624e8b2b9473419accdeaddb24ba00bc6adc3cc60",
     .deps        = { .data = firefox_deps, .len = sizeof(firefox_deps) / sizeof(firefox_deps[0]) },
     .build_flags = "",
     .build_sys   = BUILD_SHELL,

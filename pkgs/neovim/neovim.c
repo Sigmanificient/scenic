@@ -26,7 +26,7 @@ const pkg pkgs_neovim = {
     .name        = "neovim",
     .version     = "0.10.2",
     .src         = "https://github.com/neovim/neovim/archive/refs/tags/v0.10.2.tar.gz",
-    .sha256      = "0000000000000000000000000000000000000000000000000000000000000000",
+    .sha256      = "546cb2da9fffbb7e913261344bbf4cf1622721f6c5a67aa77609e976e78b8e89",
     .deps        = { .data = neovim_deps,
                      .len = sizeof(neovim_deps) / sizeof(neovim_deps[0]) },
     .build_flags = "",

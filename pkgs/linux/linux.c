@@ -19,7 +19,7 @@ const pkg pkgs_linux = {
     .name        = "linux",
     .version     = "6.12",
     .src         = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.tar.xz",
-    .sha256      = "0000000000000000000000000000000000000000000000000000000000000000",
+    .sha256      = "b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb",
     .deps        = { .data = NULL, .len = 0 },
     .build_flags = "",
     .build_sys   = BUILD_MAKE,
