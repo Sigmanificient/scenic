@@ -20,10 +20,14 @@
 #include "error.h"
 #include "scenicos.h"
 
-typedef struct {
+typedef struct resolved_s resolved;
+
+#include "store.h"
+
+struct resolved_s {
     const pkg  *def;
-    const char *store_path;
-} resolved;
+    store_path out;
+};
 
 typedef struct {
     const resolved *data;

@@ -15,6 +15,7 @@
 
 #include "store.h"
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -48,9 +49,6 @@ static void base32_encode(const uint8_t *in, size_t len, char *out) {
     out[out_idx] = '\0';
 }
 
-
-
-
 /**
  * store_path_compute() - Compute the content-addressed store path for @p.
  * @a: Arena that owns the returned string.
@@ -64,10 +62,10 @@ static void base32_encode(const uint8_t *in, size_t len, char *out) {
  * resolved dep paths). The first 20 bytes of the digest are base32
  * encoded; identical inputs always produce the same path.
  *
- * Return: "/scn/store/<hash>-<name>-<version>" owned by @a, or NULL if a
+ * Return: "/<hash>-<name>-<version>" owned by @a, or NULL if a
  * dep's store path is not yet resolved.
  */
-const char *store_path_compute(
+store_path store_path_compute(
     arena              *a,
     const pkg          *p,
     const resolved     *resolved_pkgs,
@@ -100,7 +98,7 @@ const char *store_path_compute(
         const char *dep_path = NULL;
         for (size_t j = 0; j < n_resolved; j++) {
             if (resolved_pkgs[j].def == target) {
-                dep_path = resolved_pkgs[j].store_path;
+                dep_path = resolved_pkgs[j].out;
                 break;
             }
         }
@@ -116,31 +114,34 @@ const char *store_path_compute(
     char b32[33];
     base32_encode(digest, 20, b32);
 
-    return arena_sprintf(a, "%s/%s-%s-%s",
+    char *path = arena_sprintf(a, "%s/%s-%s-%s",
                          SCN_STORE_ROOT, b32, p->name, p->version);
+
+    assert(path != NULL);
+    return UNQUALIFY(path);
 }
 
 /**
  * store_path_exists() - Check whether @store_path is a populated store entry.
- * @store_path: Path to test.
+ * @target: Path to test.
  *
  * Return: true if @store_path is an existing directory.
  */
-bool store_path_exists(const char *store_path) {
+bool store_path_exists(store_path target) {
     struct stat st;
-    if (stat(store_path, &st) < 0) return false;
+    if (stat(QUALIFY(target), &st) < 0) return false;
     return S_ISDIR(st.st_mode);
 }
 
 /**
  * store_install() - Atomically move a build output into the store.
  * @temp_path: Source directory produced by the build.
- * @store_path: Destination inside the store.
+ * @target: Destination inside the store.
  *
  * Return: 0 on success, errno value on failure.
  */
-int store_install(const char *temp_path, const char *store_path) {
-    if (rename(temp_path, store_path) < 0) {
+int store_install(const char *temp_path, store_path target) {
+    if (rename(temp_path, QUALIFY(target)) < 0) {
         return errno;
     }
     return 0;
@@ -148,13 +149,13 @@ int store_install(const char *temp_path, const char *store_path) {
 
 /**
  * store_remove() - Recursively remove a store entry.
- * @store_path: Path to remove.
+ * @target: Path to remove.
  *
  * Return: 0 on success, errno value on failure.
  */
-int store_remove(const char *store_path) {
+int store_remove(store_path target) {
     char cmd[4096];
-    int n = snprintf(cmd, sizeof(cmd), "/bin/rm -rf '%s'", store_path);
+    int n = snprintf(cmd, sizeof(cmd), "rm -rf '%s'", QUALIFY(target));
     if (n < 0 || (size_t)n >= sizeof(cmd)) return ENAMETOOLONG;
     int rc = system(cmd);
     return rc == 0 ? 0 : EIO;

@@ -18,20 +18,30 @@
 
 #include "scenicos.h"
 #include "arena.h"
-#include "resolve.h"
 
 #define SCN_STORE_ROOT "/scn/store"
 
-const char *store_path_compute(
+#define QUALIFY(store_path) (store_path - strlen(SCN_STORE_ROOT))
+#define UNQUALIFY(full_store_path) (full_store_path + strlen(SCN_STORE_ROOT))
+
+/*
+ * Localized path of resolved package formatted as "/<hash>-<name>-<version>".
+ * Fully qualified absolute path can be obtain through the QUALITY macro.
+ **/
+typedef char const *store_path;
+
+#include "resolve.h"
+
+store_path store_path_compute(
     arena              *a,
     const pkg          *p,
     const resolved     *resolved_pkgs,
     size_t              n_resolved);
 
-bool store_path_exists(const char *store_path);
+bool store_path_exists(store_path entry);
 
-int store_install(const char *temp_path, const char *store_path);
+int store_install(const char *temp_path, store_path target);
 
-int store_remove(const char *store_path);
+int store_remove(store_path target);
 
 #endif

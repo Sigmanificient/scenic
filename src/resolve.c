@@ -100,7 +100,7 @@ static resolve_error visit(
     }
 
     out[*out_len].def        = p;
-    out[*out_len].store_path = store_path_compute(a, p, out, *out_len);
+    out[*out_len].out = store_path_compute(a, p, out, *out_len);
     (*out_len)++;
     state[idx] = VISITED;
     return RESOLVE_OK_VAL;

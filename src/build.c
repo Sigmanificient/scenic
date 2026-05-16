@@ -55,14 +55,14 @@ realize_error build_pkg(
 {
     (void)all_pkgs;
 
-    const char *store_path = resolved_pkgs[pkg_idx].store_path;
+    const char *out = resolved_pkgs[pkg_idx].out;
 
-    if (store_path_exists(store_path)) {
+    if (store_path_exists(out)) {
         return REALIZE_OK_VAL;
     }
 
-    const char *base = strrchr(store_path, '/');
-    base = (base != NULL) ? base + 1 : store_path;
+    const char *base = strrchr(out, '/');
+    base = (base != NULL) ? base + 1 : out;
 
     char *work_dir     = arena_sprintf(a, "%s/%s", WORK_ROOT, base);
     char *src_tarball  = arena_sprintf(a, "%s/source", work_dir);
@@ -128,7 +128,7 @@ realize_error build_pkg(
 
     sandbox_teardown(sandbox_root);
 
-    int rc = store_install(out_dir, store_path);
+    int rc = store_install(out_dir, out);
     if (rc != 0) {
         return (realize_error){
             .kind = REALIZE_E_STORE,
@@ -169,7 +169,7 @@ bool build_pkg_from_def(arena *a, const pkg *def)
         return false;
     }
 
-    printf("building: [%s]\n", resolved_pkgs.data[def_idx].store_path);
+    printf("building: [%s]\n", resolved_pkgs.data[def_idx].out);
 
     realize_error err = build_pkg(
         a,
