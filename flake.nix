@@ -28,6 +28,7 @@
         env = {
           CC = pkgs.stdenv.cc;
           MAKEFLAGS = "-j";
+          USE_LOCAL_DIRS = true;
         };
 
         packages = with pkgs; [

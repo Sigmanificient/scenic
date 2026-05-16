@@ -19,7 +19,11 @@
 #include "scenicos.h"
 #include "arena.h"
 
-#define SCN_STORE_ROOT "/scn/store"
+#ifdef USE_LOCAL_DIRS
+    #define SCN_STORE_ROOT ".scn-runtime/store"
+#else
+    #define SCN_STORE_ROOT "/scn/store"
+#endif
 
 #define QUALIFY(store_path) (store_path - strlen(SCN_STORE_ROOT))
 #define UNQUALIFY(full_store_path) (full_store_path + strlen(SCN_STORE_ROOT))

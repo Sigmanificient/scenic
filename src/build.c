@@ -29,7 +29,11 @@
 
 #include "all.h"
 
-#define WORK_ROOT "/var/lib/scn/work"
+#ifdef USE_LOCAL_DIRS
+    #define WORK_ROOT ".scn-runtime/work"
+#else
+    #define WORK_ROOT "/var/lib/scn/work"
+#endif
 
 /**
  * build_pkg() - Realize one package into the store.
