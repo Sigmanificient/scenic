@@ -77,10 +77,12 @@ const char *store_path_compute(
     sha256_init(&ctx);
 
     #define HASH_FIELD(s) do { \
-        size_t l = strlen(s); \
-        sha256_update(&ctx, &l, sizeof(l)); \
-        sha256_update(&ctx, (s), l); \
-        sha256_update(&ctx, "\0", 1); \
+        if ((s) != NULL) { \
+            size_t l = strlen(s); \
+            sha256_update(&ctx, &l, sizeof(l)); \
+            sha256_update(&ctx, (s), l); \
+            sha256_update(&ctx, "\0", 1); \
+        } \
     } while (0)
 
     HASH_FIELD(p->name);
