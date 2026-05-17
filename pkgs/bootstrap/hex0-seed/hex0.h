@@ -13,11 +13,11 @@
    The GNU General Public License is contained in the file LICENSE.
 */
 
-#ifndef PKGS_DASH_H
-#define PKGS_DASH_H
+#ifndef SCN_PKG_HEX0_SEED_H
+    #define SCN_PKG_HEX0_SEED_H
 
-#include "scenicos.h"
+    #include "scenicos.h"
 
-extern const pkg pkgs_dash;
+extern const pkg pkgs_hex0;
 
 #endif

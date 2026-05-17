@@ -1,3 +1,18 @@
+/* Copyright (C) 2026 tonybanters (tony@tonybtw.com)
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   The GNU General Public License is contained in the file LICENSE.
+*/
+
 #include "build.h"
 
 #include <errno.h>
@@ -12,7 +27,13 @@
 #include "sandbox.h"
 #include "store.h"
 
-#define WORK_ROOT "/var/lib/scn/work"
+#include "all.h"
+
+#ifdef USE_LOCAL_DIRS
+    #define WORK_ROOT ".scn-runtime/work"
+#else
+    #define WORK_ROOT "/var/lib/scn/work"
+#endif
 
 /**
  * build_pkg() - Realize one package into the store.
@@ -38,14 +59,14 @@ realize_error build_pkg(
 {
     (void)all_pkgs;
 
-    const char *store_path = resolved_pkgs[pkg_idx].store_path;
+    const char *out = resolved_pkgs[pkg_idx].out;
 
-    if (store_path_exists(store_path)) {
+    if (store_path_exists(out)) {
         return REALIZE_OK_VAL;
     }
 
-    const char *base = strrchr(store_path, '/');
-    base = (base != NULL) ? base + 1 : store_path;
+    const char *base = strrchr(out, '/');
+    base = (base != NULL) ? base + 1 : out;
 
     char *work_dir     = arena_sprintf(a, "%s/%s", WORK_ROOT, base);
     char *src_tarball  = arena_sprintf(a, "%s/source", work_dir);
@@ -86,12 +107,12 @@ realize_error build_pkg(
     }
 
     char *const tar_argv[] = {
-        "/usr/bin/tar", "-xf", src_tarball, "-C", src_dir, "--strip-components=1",
+        "tar", "-xf", src_tarball, "-C", src_dir, "--strip-components=1",
         NULL,
     };
     char *const tar_envp[] = { NULL };
 
-    run_error tar_err = run("/usr/bin/tar", tar_argv, tar_envp, NULL, log_path);
+    run_error tar_err = run(tar_argv, tar_envp, NULL, log_path);
     if (tar_err.kind != RUN_OK) {
         return (realize_error){
             .kind = REALIZE_E_BUILD,
@@ -111,7 +132,7 @@ realize_error build_pkg(
 
     sandbox_teardown(sandbox_root);
 
-    int rc = store_install(out_dir, store_path);
+    int rc = store_install(out_dir, out);
     if (rc != 0) {
         return (realize_error){
             .kind = REALIZE_E_STORE,
@@ -121,4 +142,49 @@ realize_error build_pkg(
     }
 
     return REALIZE_OK_VAL;
+}
+
+bool build_pkg_from_def(arena *a, const pkg *def)
+{
+    resolved_list resolved_pkgs;
+    system_cfg cfg = {
+      .pkgs = {
+        .data = PKGS_REGISTRY,
+        .len = PKGS_REGISTRY_LEN
+      }
+    };
+
+    resolve_error rerr = resolve(a, &cfg, &resolved_pkgs);
+    if (rerr.kind != RESOLVE_OK) {
+        fprintf(stderr, "%s : %s\n", rerr.pkg_name, rerr.dep_name);
+        return false;
+    }
+
+    bool found = false;
+    size_t def_idx;
+    for (size_t i = 0; i < resolved_pkgs.len; i++) {
+        if (resolved_pkgs.data[i].def != def) continue;
+        def_idx = i;
+        found = true;
+        break;
+    }
+    if (!found) {
+        fprintf(stderr, "something went wrong :(\n");
+        return false;
+    }
+
+    printf("building: [%s]\n", resolved_pkgs.data[def_idx].out);
+
+    realize_error err = build_pkg(
+        a,
+        resolved_pkgs.data[def_idx].def,
+        &cfg.pkgs,
+        resolved_pkgs.data,
+        def_idx);
+    if (err.kind != REALIZE_OK) {
+        realize_error_print(&err);
+        return false;
+    }
+
+    return true;
 }

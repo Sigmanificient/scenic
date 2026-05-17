@@ -5,7 +5,9 @@
     self,
     nixpkgs,
   }: let
-    applySystems = nixpkgs.lib.genAttrs [
+    inherit (nixpkgs) lib;
+
+    applySystems = lib.genAttrs [
       "x86_64-linux"
       "aarch64-linux"
     ];
@@ -26,11 +28,15 @@
         env = {
           CC = pkgs.stdenv.cc;
           MAKEFLAGS = "-j";
+          USE_LOCAL_DIRS = true;
         };
 
         packages = with pkgs; [
+          hl-log-viewer
           compiledb
           gcovr
+          pkg-config
+          (lib.getDev curl)
         ];
       };
     });

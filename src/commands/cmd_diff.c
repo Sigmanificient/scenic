@@ -13,11 +13,15 @@
    The GNU General Public License is contained in the file LICENSE.
 */
 
-#ifndef PKGS_DASH_H
-#define PKGS_DASH_H
+#include "command_list.h"
 
-#include "scenicos.h"
+#include <stdlib.h>
 
-extern const pkg pkgs_dash;
+int cmd_diff(RuntimeOpts *options, int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    (void)options;
 
-#endif
+    return EXIT_SUCCESS;
+}

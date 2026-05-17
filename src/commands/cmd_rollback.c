@@ -13,11 +13,20 @@
    The GNU General Public License is contained in the file LICENSE.
 */
 
-#ifndef PKGS_DASH_H
-#define PKGS_DASH_H
+#include "arena.h"
+#include "activate.h"
 
-#include "scenicos.h"
+#include "command_list.h"
 
-extern const pkg pkgs_dash;
+int cmd_rollback(RuntimeOpts *options, int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    (void)options;
 
-#endif
+    arena *a = arena_create(1 << 16);
+    if (a == NULL) return 1;
+    int rc = activate_rollback(a);
+    arena_destroy(a);
+    return rc == 0 ? 0 : 1;
+}

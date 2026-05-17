@@ -1,13 +1,75 @@
+/* Copyright (C) 2026 tonybanters (tony@tonybtw.com)
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   The GNU General Public License is contained in the file LICENSE.
+*/
+
 #include "run.h"
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+#include <linux/limits.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
 #include <unistd.h>
+
+static
+bool resolve_path(const char *cmd, char **out)
+{
+    static char full[PATH_MAX];
+    size_t len;
+
+    if (*cmd == '/') {
+        memcpy(full, cmd, strlen(cmd) + 1);
+        return true;
+    }
+
+    const char *path = getenv("PATH");
+    if (path == NULL)
+        goto not_found;
+
+    while (*path != '\0') {
+        len = strcspn(path, ":");
+
+        if (len == 0) {
+            path++;
+            continue;
+        }
+
+        if (len + 1 + strlen(cmd) < sizeof(full)) {
+            memcpy(full, path, len);
+            full[len] = '/';
+            strcpy(full + len + 1, cmd);
+
+            if (access(full, X_OK) == 0) {
+                *out = full;
+                return true;
+            }
+        }
+
+        path += len;
+        path += strspn(path, ":");
+    }
+not_found:
+    *out = NULL;
+    return false;
+}
 
 /**
  * run() - Fork+exec a command with stdout/stderr captured to a log.
@@ -23,13 +85,20 @@
  * @log_path filled; RUN_E_SPAWN or RUN_E_IO with @errno_val filled.
  */
 run_error run(
-    const char  *cmd,
-    char *const  argv[],
+    char *const argv[],
     char *const  envp[],
     const char  *cwd,
     const char  *log_path)
 {
     run_error err = RUN_OK_VAL;
+
+    char *cmd_filepath;
+
+    if (!resolve_path(argv[0], &cmd_filepath)) {
+        err.kind = RUN_E_SPAWN;
+        err.errno_val = errno;
+        return err;
+    }
 
     int log_fd = open(log_path, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
     if (log_fd < 0) {
@@ -63,8 +132,8 @@ run_error run(
             close(devnull);
         }
 
-        execve(cmd, argv, envp);
-        dprintf(STDERR_FILENO, "run: execve(%s) failed: %s\n", cmd, strerror(errno));
+        execve(cmd_filepath, argv, envp);
+        dprintf(STDERR_FILENO, "run: execve(%s) failed: %s\n", argv[0], strerror(errno));
         _exit(127);
     }
 

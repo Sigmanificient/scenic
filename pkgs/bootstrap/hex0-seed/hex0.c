@@ -13,11 +13,11 @@
    The GNU General Public License is contained in the file LICENSE.
 */
 
-#ifndef PKGS_DASH_H
-#define PKGS_DASH_H
+#include "hex0.h"
 
-#include "scenicos.h"
-
-extern const pkg pkgs_dash;
-
-#endif
+const pkg pkgs_hex0 = {
+    .name = "hex0-seed",
+    .version = "779e0105b6ea7a8f6d860cdcd7853ec33481fa5b",
+    .src = "https://github.com/oriansj/bootstrap-seeds/archive/779e0105b6ea7a8f6d860cdcd7853ec33481fa5b.tar.gz",
+    .sha256 = "5c0b88037a78beecc29293bfdf9a3e37d29ab4ab33a5b4f5771f0ab802257a81",
+};

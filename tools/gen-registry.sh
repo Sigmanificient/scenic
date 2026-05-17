@@ -7,7 +7,7 @@ PKGS_DIR="${PKGS_DIR:-pkgs}"
 OUT_H="$PKGS_DIR/all.h"
 OUT_C="$PKGS_DIR/all.c"
 
-recipes=$(find "$PKGS_DIR" -mindepth 2 -maxdepth 2 -name '*.h' | sort)
+recipes=$(find "$PKGS_DIR" -mindepth 2 -name '*.h' | sort)
 
 {
     printf '/* AUTO-GENERATED. Do not edit. */\n'
