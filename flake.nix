@@ -32,6 +32,7 @@
         };
 
         packages = with pkgs; [
+          hl-log-viewer
           compiledb
           gcovr
           pkg-config

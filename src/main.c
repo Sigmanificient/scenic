@@ -18,20 +18,36 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "command_list.h"
+#include "logging.h"
 #include "scenicos.h"
 
-#include "command_list.h"
+static
+const RuntimeOpts DEFAULT_RUNTIME_OPTIONS = {
+    .logger = {
+        .enable_verbose_logging = false,
+        .use_structured_logs = false,
+    },
+};
 
 static
 char *GLOBAL_OPTIONS_DESC[] = {
     "increase verbosity of logs",
-    "show this message"
+    "show this message",
+    "display logs as json"
+};
+
+enum GLOBAL_OPTION_FLAGS {
+    FLAG_LOG_STRUCTURED = 'S',
+    FLAG_VERBOSE = 'l',
+    FLAG_HELP = 'h',
 };
 
 static
 struct option GLOBAL_OPTIONS[] = {
-    {"verbose", no_argument,       0, 'l'},
-    {"help",    no_argument,       0, 'h'},
+    {"help", no_argument, 0, FLAG_HELP},
+    {"verbose", no_argument, 0, FLAG_VERBOSE},
+    {"struct-logs", required_argument, 0, FLAG_LOG_STRUCTURED},
     {0, 0, 0, 0}
 };
 
@@ -120,18 +136,26 @@ int main(int argc, char **argv)
 {
     int opt;
     const char *cmd_name;
-    RuntimeOpts s;
+    RuntimeOpts s = DEFAULT_RUNTIME_OPTIONS;
 
-    while ((opt = getopt_long(argc, argv, "+lh", GLOBAL_OPTIONS, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "+lSh", GLOBAL_OPTIONS, NULL)) > 0) {
         switch (opt) {
-            case 'l': s.enable_verbose_logging = true; break;
-            case 'h': print_global_usage(); return EXIT_SUCCESS;
-            default:  print_global_usage(); return EXIT_FAILURE;
+            case FLAG_VERBOSE:
+                s.logger.enable_verbose_logging = true;
+                break;
+            case FLAG_HELP:
+                print_global_usage();
+                return EXIT_SUCCESS;
+            case FLAG_LOG_STRUCTURED:
+                s.logger.use_structured_logs = true;
+                break;
+            default:
+                print_global_usage();
+                return EXIT_FAILURE;
         }
     }
 
-    if (s.enable_verbose_logging)
-        fprintf(stderr, "verbose mode enabled\n");
+    log(&s.logger, LOG_DEBUG, "main", "verbose mode enabled");
 
     if (optind >= argc) {
         print_global_usage();
@@ -143,8 +167,8 @@ int main(int argc, char **argv)
     for (size_t i = 0; i < COMMANDS_LEN; i++) {
         if (strcmp(COMMANDS[i].name, cmd_name) != 0) continue;
 
-        if (s.enable_verbose_logging)
-            fprintf(stderr, "cmd handler [%s]\n", COMMANDS[i].name);
+        logf(&s.logger, LOG_DEBUG, "main",
+            "cmd handler [%s]", COMMANDS[i].name);
 
         return COMMANDS[i].handler(&s, argc - optind, argv + optind);
     }

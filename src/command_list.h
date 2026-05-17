@@ -14,13 +14,15 @@
 */
 
 #include "scenicos.h"
+#include "logging.h"
 
 #define lengthof(s) (sizeof (s) / sizeof ((s)[0]))
 
 extern const system_cfg CFG;
 
 typedef struct {
-    bool enable_verbose_logging;
+    LogSettings logger;
+    // TODO: ^ merge as flagset?
 } RuntimeOpts;
 
 typedef int (*CommandHandler)(RuntimeOpts *options, int argc, char **argv);

@@ -22,33 +22,33 @@
 #include "all.h"
 #include "arena.h"
 #include "build.h"
+#include "logging.h"
 
 int cmd_build(RuntimeOpts *options, int argc, char **argv)
 {
     arena *a;
 
     (void)options;
-    if (argc < 3) {
-        fprintf(stderr, "scn: no package to build.\n");
+    if (argc < 2) {
+        log(&options->logger, LOG_ERROR, "build", "no package to build.");
         return EXIT_FAILURE;
     }
 
     a = arena_create(1 << 20);
 
     if (a == NULL) {
-        fprintf(stderr, "scn: arena alloc failed\n");
+        log(&options->logger, LOG_ERROR, "build", "couldn't allocate arena.");
         return EXIT_FAILURE;
     }
 
     for (size_t i = 0; i < PKGS_REGISTRY_LEN; i++) {
-        if (!strcmp(PKGS_REGISTRY[i]->name, argv[2])) {
+        if (!strcmp(PKGS_REGISTRY[i]->name, argv[1])) {
             build_pkg_from_def(a, PKGS_REGISTRY[i]);
             return EXIT_SUCCESS;
         }
     }
-    fprintf(stderr,
-        "scn: no package named [%s] to build.\n",
-        argv[2]);
+    logf(&options->logger, LOG_ERROR, "build",
+        "no package named [%s] to build.", argv[1]);
     return EXIT_FAILURE;
 }
 
