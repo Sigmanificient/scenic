@@ -62,7 +62,8 @@ RM ?= rm --force
 
 .PHONY: all clean registry switch
 
-all: $(BIN)
+.NOTPARALLEL: all
+all: $(REGISTRY) $(BIN)
 
 $(BIN): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
@@ -98,4 +99,4 @@ switch: scn
 
 .PHONY: debug
 debug:
-	$(MAKE) SANITIZE=1 PROFILE=1
+	$(MAKE) all SANITIZE=1 PROFILE=1
